@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>下班倒计时</title>
+    <style>
+      #countdown {
+        font-size: 24px;
+        text-align: center;
+        margin-top: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="countdown"></div>
+
+    <script>
+      // 获取当前时间
+      var now = new Date();
+      var currentHour = now.getHours();
+      var currentMinute = now.getMinutes();
+      var currentSecond = now.getSeconds();
+
+      // 设置目标时间为下午五点半
+      var targetHour = 17; // 下午五点（24小时制）
+      var targetMinute = 30; // 半小时
+      var targetSecond = 0; // 没有秒
+
+      // 计算距离目标时间的剩余时间
+      var remainingHours, remainingMinutes, remainingSeconds;
+
+      if (
+        currentHour < targetHour ||
+        (currentHour === targetHour && currentMinute < targetMinute)
+      ) {
+        remainingHours = targetHour - currentHour;
+        remainingMinutes = targetMinute - currentMinute;
+      } else {
+        remainingHours = 24 - currentHour + targetHour;
+        remainingMinutes = 60 - currentMinute + targetMinute;
+        remainingHours--;
+      }
+
+      if (currentSecond > targetSecond) {
+        remainingSeconds = 60 - currentSecond + targetSecond;
+        remainingMinutes--;
+        if (remainingMinutes < 0) {
+          remainingMinutes += 60;
+          remainingHours--;
+        }
+      } else {
+        remainingSeconds = targetSecond - currentSecond;
+      }
+
+      // 将剩余时间显示在页面上
+      var countdownElement = document.getElementById("countdown");
+      countdownElement.innerHTML =
+        "距离下班还有 " +
+        remainingHours +
+        " 小时 " +
+        remainingMinutes +
+        " 分钟 " +
+        remainingSeconds +
+        " 秒";
+
+      // 更新倒计时每秒钟
+      setInterval(function () {
+        currentSecond++;
+
+        if (currentSecond >= 60) {
+          currentMinute++;
+          currentSecond = 0;
+        }
+
+        if (currentMinute >= 60) {
+          currentHour++;
+          currentMinute = 0;
+        }
+
+        if (currentHour >= 24) {
+          currentHour = 0;
+        }
+
+        if (
+          currentHour < targetHour ||
+          (currentHour === targetHour && currentMinute < targetMinute)
+        ) {
+          remainingHours = targetHour - currentHour;
+          remainingMinutes = targetMinute - currentMinute;
+        } else {
+          remainingHours = 24 - currentHour + targetHour;
+          remainingMinutes = 60 - currentMinute + targetMinute;
+          remainingHours--;
+        }
+
+        if (currentSecond > targetSecond) {
+          remainingSeconds = 60 - currentSecond + targetSecond;
+          remainingMinutes--;
+          if (remainingMinutes < 0) {
+            remainingMinutes += 60;
+            remainingHours--;
+          }
+        } else {
+          remainingSeconds = targetSecond - currentSecond;
+        }
+
+        if (
+          remainingHours === 0 &&
+          remainingMinutes === 0 &&
+          remainingSeconds === 0
+        ) {
+          countdownElement.innerHTML = "已过期";
+        } else {
+          countdownElement.innerHTML =
+            "距离下班还有 " +
+            remainingHours +
+            " 小时 " +
+            remainingMinutes +
+            " 分钟 " +
+            remainingSeconds +
+            " 秒";
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>
